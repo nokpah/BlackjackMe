@@ -10,16 +10,14 @@ public class Blackjack  {
         System.out.println("Welcome to the BSU Casino");
 
         Deck playDeck = new Deck();
-        playDeck.createDeck();
+        Player player1 = new Player();
+        Dealer dealer = new Dealer();
         playDeck.shufDeck();
 
 
-        Deck playerDeck = new Deck();
-        Deck dealerDeck = new Deck();
-
         //Player money
         //Possibly throw this in a class
-        double playCoins = 100.00;
+        double playCoins = 200.00;
 
         //Get user input
         Scanner user = new Scanner(System.in);
@@ -46,22 +44,22 @@ public class Blackjack  {
 
             //Deal Cards
             //player will draw his 2 cards
-            playerDeck.draw(playDeck);
-            playerDeck.draw(playDeck);
+           playDeck.draw(2,player1);
+
 
             //Dealer will draw his 2 cards
-            dealerDeck.draw(dealerDeck);
-            dealerDeck.draw(dealerDeck);
+            playDeck.draw(2,dealer);
 
             //This will print the players hands
             while(true){
-                System.out.println("Your two cards: ");
-                System.out.println(playDeck.toString());
-                System.out.println("Your hand total is: "+playerDeck.cardsValue());
+                System.out.println("Your cards: ");
+                //System.out.println(playDeck.toString());
+                System.out.println(player1.checkHand());
+                System.out.println("Your hand total is: "+player1.cardsValue());
 
                 //Show Dealer/House hand
                 //Usually you only see 1 of the dealers cards
-                System.out.println("The Dealer has: "+dealerDeck.getCard(0).toString() + " and [Hidden]");
+                System.out.println("The Dealer has: "+dealer.checkHand(1)+ " and [Hidden]");
 
             //Hit or Stay
             //Hit will give the player another card
@@ -73,13 +71,13 @@ public class Blackjack  {
                     //This will draw a card from the deck that is being used
                     //The "-1" is to get the correct index
                     if(playerResponse == 1){
-                        playerDeck.draw(playDeck);
-                        System.out.println("You draw a: "+playerDeck.getCard(playDeck.deckSize()-1).toString());
+                        playDeck.draw(1,player1);
+                        System.out.println("You draw a: "+playDeck.getCard(playDeck.deckSize()-1).toString());
 
                         //Bust
                         //If hand total exceed 21 ( handTotValue > 21)
-                        if(playerDeck.cardsValue() > 21){
-                            System.out.println("Your hand is total "+playerDeck.cardsValue()+" is greater than 21. You bust!");
+                        if(player1.cardsValue() > 21){
+                            System.out.println("Your hand is total "+player1.cardsValue()+" is greater than 21. You bust!");
                             playCoins -= playerBet;
                             roundEnd = true;
                             break;
@@ -95,11 +93,11 @@ public class Blackjack  {
 
             }
             //Show the dealers hand after hit/Stay
-            System.out.println("Dealer Cards: "+dealerDeck.toString());
+            System.out.println("Dealer Cards: "+dealer.checkHand());
             //Dealer hand total to see if they won
             //Take the players money and end the round
-            if((dealerDeck.cardsValue() > playerDeck.cardsValue()) && roundEnd == false){
-                System.out.println("Dealer hand: "+dealerDeck.cardsValue()+" | Your Hand: " +playerDeck.cardsValue());
+            if((dealer.cardsValue() > player1.cardsValue()) && roundEnd == false){
+                System.out.println("Dealer hand: "+dealer.cardsValue()+" | Your Hand: " +player1.cardsValue());
                 System.out.println("Dealer's hand is worth more. You lose!");
                 playCoins -= playerBet;
                 roundEnd = true;
@@ -110,17 +108,19 @@ public class Blackjack  {
              * As intended in our report, if the dealer hand total is less than 17
              * have them keep drawing
              */
-            while(dealerDeck.cardsValue() < 17 && roundEnd == false){
-                dealerDeck.draw(playDeck);
-                System.out.println("Dealer draws: "+dealerDeck.getCard(dealerDeck.deckSize()-1).toString());
+            while(dealer.cardsValue() < 17 && roundEnd == false){
+                playDeck.draw(1,dealer);
+                System.out.println("Dealer draws.");
+                System.out.println("Dealer hand: "+dealer.checkHand());
             }
 
             //Dealer total
-            System.out.println("Dealer hand: "+dealerDeck.cardsValue());
+            System.out.println("Dealer hand: "+dealer.cardsValue());
+
             //If dealer bust
             //You have to add roundEnd for dealer because, it's his hand total that
             //determines if the player wins or loses
-            if(dealerDeck.cardsValue() > 21 && roundEnd == false){
+            if(dealer.cardsValue() > 21 && roundEnd == false){
                 System.out.println("Dealers hand total is over 21. You Win!");
                 playCoins += playerBet;
                 roundEnd = true;
@@ -132,12 +132,12 @@ public class Blackjack  {
              * " the player and dealer have hands with the same total below 22."
              * I'll name this push for authenticity
              */
-            if(playDeck.cardsValue() == dealerDeck.cardsValue() && roundEnd == false){
+            if(player1.cardsValue() == dealer.cardsValue() && roundEnd == false){
                 System.out.println("Both hands hold the same value. Push(Tie)");
                 roundEnd = true;
             }
             //Player wins
-            if ((playDeck.deckSize() > dealerDeck.cardsValue()) && roundEnd == false){
+            if ((player1.cardsValue() > dealer.cardsValue()) && roundEnd == false){
                 System.out.println("Your hand is worth more. You win!");
                 playCoins += playerBet;
                 roundEnd = true;
@@ -149,8 +149,8 @@ public class Blackjack  {
             }
 
             //Returns cards back to the playing deck
-            playDeck.returnDeck(playDeck);
-            dealerDeck.returnDeck(playDeck);
+            player1.emptyHnad();
+            dealer.emptyHnad();
             System.out.println("End of hand");
 
         }
