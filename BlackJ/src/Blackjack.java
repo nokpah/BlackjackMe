@@ -1,13 +1,14 @@
 import java.util.Scanner;
 
-public class Blackjack  {
+public class Blackjack {
 
-    //Interface gui = new Interface();
 
 
     public static void main(String[] args) {
 
         System.out.println("Welcome to the BSU Casino");
+
+
 
         Deck playDeck = new Deck();
         Player player1 = new Player();
@@ -21,9 +22,11 @@ public class Blackjack  {
 
         //Get user input
         Scanner user = new Scanner(System.in);
+        Scanner response = new Scanner(System.in);
+        String answer = new String();
 
 
-        //  new Thread(new Blackjack()).start();
+
 
         /**
          * This is to loop cycle for the game
@@ -41,6 +44,7 @@ public class Blackjack  {
             }
 
             boolean roundEnd = false;
+            boolean bust = false;
 
             //Deal Cards
             //player will draw his 2 cards
@@ -53,7 +57,6 @@ public class Blackjack  {
             //This will print the players hands
             while(true){
                 System.out.println("Your cards: ");
-                //System.out.println(playDeck.toString());
                 System.out.println(player1.checkHand());
                 System.out.println("Your hand total is: "+player1.cardsValue());
 
@@ -72,7 +75,7 @@ public class Blackjack  {
                     //The "-1" is to get the correct index
                     if(playerResponse == 1){
                         playDeck.draw(1,player1);
-                        System.out.println("You draw a: "+playDeck.getCard(playDeck.deckSize()-1).toString());
+                        System.out.println("You draw a: "+player1.checkDraw());
 
                         //Bust
                         //If hand total exceed 21 ( handTotValue > 21)
@@ -80,8 +83,10 @@ public class Blackjack  {
                             System.out.println("Your hand is total "+player1.cardsValue()+" is greater than 21. You bust!");
                             playCoins -= playerBet;
                             roundEnd = true;
+                            bust = true;
                             break;
                         }
+
 
                     }
                     //Stay
@@ -92,15 +97,35 @@ public class Blackjack  {
 
 
             }
+            if(bust == true){
+                System.out.println("Do you want to play again? (1) for Yes, (2) for No.");
+                int playerResponse2 = response.nextInt();
+                if (playerResponse2 == 1) {
+                    roundEnd = true;
+
+                }
+                else{
+                    break;
+                }
+            }
+
+
             //Show the dealers hand after hit/Stay
             System.out.println("Dealer Cards: "+dealer.checkHand());
+
             //Dealer hand total to see if they won
             //Take the players money and end the round
             if((dealer.cardsValue() > player1.cardsValue()) && roundEnd == false){
                 System.out.println("Dealer hand: "+dealer.cardsValue()+" | Your Hand: " +player1.cardsValue());
                 System.out.println("Dealer's hand is worth more. You lose!");
                 playCoins -= playerBet;
-                roundEnd = true;
+                System.out.println("Do you want to play again? (1) for Yes, (2) for No.");
+                int playerResponse2 = response.nextInt();
+                if (playerResponse2 == 1) {
+                    roundEnd = true;
+                }
+                else
+                    break;
             }
 
             /**
@@ -123,7 +148,13 @@ public class Blackjack  {
             if(dealer.cardsValue() > 21 && roundEnd == false){
                 System.out.println("Dealers hand total is over 21. You Win!");
                 playCoins += playerBet;
-                roundEnd = true;
+                System.out.println("Do you want to play again? (1) for Yes, (2) for No.");
+                int playerResponse2 = response.nextInt();
+                if (playerResponse2 == 1) {
+                    roundEnd = true;
+                }
+                else
+                    break;
             }
 
             //Push
@@ -134,31 +165,55 @@ public class Blackjack  {
              */
             if(player1.cardsValue() == dealer.cardsValue() && roundEnd == false){
                 System.out.println("Both hands hold the same value. Push(Tie)");
-                roundEnd = true;
+                System.out.println("Do you want to play again? (1) for Yes, (2) for No.");
+                int playerResponse2 = response.nextInt();
+                if (playerResponse2 == 1) {
+                    roundEnd = true;
+                }
+                else
+                    break;
             }
             //Player wins
             if ((player1.cardsValue() > dealer.cardsValue()) && roundEnd == false){
                 System.out.println("Your hand is worth more. You win!");
                 playCoins += playerBet;
-                roundEnd = true;
+                System.out.println("Do you want to play again? (1) for Yes, (2) for No.");
+                int playerResponse2 = response.nextInt();
+                if (playerResponse2 == 1) {
+                    roundEnd = true;
+                }
+                else
+                    break;
             }
             else if (roundEnd == false){
                 System.out.println("You lose");
                 playCoins -= playerBet;
-                roundEnd = true;
+                System.out.println("Do you want to play again? (1) for Yes, (2) for No.");
+                int playerResponse2 = response.nextInt();
+                if (playerResponse2 == 1) {
+                    roundEnd = true;
+                }
+                else
+                    break;
             }
 
             //Returns cards back to the playing deck
             player1.emptyHnad();
             dealer.emptyHnad();
+            System.out.println("");
             System.out.println("End of hand");
-
+            System.out.println("");
         }
 
-        System.out.println("You've run out of coins");
+        if(playCoins == 0) {
+            System.out.println("You've run out of coins");
+        }
 
-
+        System.out.println("Thank you for playing. Goodbye!");
     }
 
 
+
+
 }
+

@@ -76,7 +76,7 @@ private ArrayList<Card> cards;
     }
 
     //Takes card from a deck
-    //The 0 is to get the first thing in the deck
+
     public void draw(int toDraw, Player player)
     {
         for (int i = 0; i <  toDraw; i++)

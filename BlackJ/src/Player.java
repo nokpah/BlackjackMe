@@ -71,7 +71,8 @@ public class Player {
         }
         return false;
     }
-    public boolean checkHand(Card card)
+
+   public boolean checkHand(Card card)
     {
         for(int i = 0; i < hand.size(); i++)
         {
@@ -91,6 +92,15 @@ public class Player {
     public void addCard(Card card)
     {
         hand.add(card);
+    }
+
+    public String checkDraw(){
+
+        String cardHand = "";
+        cardHand = cardHand + hand.get(hand.size()-1).toString();
+
+
+        return cardHand.trim();
     }
 
     //Give the total of the cards
